@@ -8,6 +8,6 @@ int main()
 	CLApp CLAppObj;
 	Algorithm AlgObj;
 	AlgObj.InitCLApp(&CLAppObj, "cl_functions.cl");
-	AlgObj.ExecuteCLApp1(&CLAppObj);
+	AlgObj.ExecuteCLApp3(&CLAppObj);
 	return 0;
 }

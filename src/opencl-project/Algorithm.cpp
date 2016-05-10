@@ -17,6 +17,7 @@ void Algorithm::InitCLApp(CLApp* CLAppObj, const std::string& CLSrcFilePath)
 	vector<string> KernelNames;
 	KernelNames.push_back("simple_add");
 	KernelNames.push_back("hello");
+	KernelNames.push_back("image_process");
 	CLAppObj->Init(CLSrcFilePath, KernelNames);
 }
 
@@ -55,4 +56,22 @@ void Algorithm::ExecuteCLApp2(CLApp* CLAppObj)
 
 	cmdQueue.enqueueReadBuffer(buf.first, CL_TRUE, 0, sizeof(A), A);
 	cout << A;
+}
+
+void Algorithm::ExecuteCLApp3(CLApp* CLAppObj)
+{
+	cv::Mat I = cv::imread("test.png", CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat Iorig = I.clone();
+	cl::CommandQueue cmdQueue = CLAppObj->GetCmdQueue();
+	CLBuffer buf = CLAppObj->CreateBuffer(I.data, I.total(), CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
+	cl::Kernel& kernel = CLAppObj->GetKernel("image_process");
+	kernel.setArg(0, buf.first);
+	kernel.setArg(1, I.rows);
+	kernel.setArg(2, I.cols);
+	cmdQueue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(I.rows, I.cols), cl::NullRange);
+	cmdQueue.finish();
+	cmdQueue.enqueueReadBuffer(buf.first, CL_TRUE, 0, I.total(), I.data);
+	cv::imshow("IOrig", Iorig);
+	cv::imshow("I", I);
+	cv::waitKey(0);
 }
