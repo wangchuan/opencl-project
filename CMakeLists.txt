@@ -4,6 +4,13 @@ set(TARGET_BUILD_PLATFORM x64)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Add OpenCV:
+set(OpenCV_STATIC OFF)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS})
+add_definitions(${OpenCV_DEFINITIONS})
+
 project(opencl-project)
 
 include_directories(./libs/OpenCL/)
@@ -20,6 +27,7 @@ if(MSVC AND OpenCV_STATIC)
 endif()
 
 target_link_libraries(opencl-project  
+	${OpenCV_LIBS}
 	${CMAKE_CURRENT_SOURCE_DIR}/libs/OpenCL/lib/${TARGET_BUILD_PLATFORM}/OpenCL.lib
 )
 

@@ -20,4 +20,14 @@ kernel void simple_add(global const int* A, global const int* B, global int* C)
 {
 	int index = get_global_id(0);
 	C[index] = A[index] + B[index];
-} 
+}
+
+kernel void image_process(global unsigned char* src, const int height, const int width)
+{
+	int y = get_global_id(0);
+	int x = get_global_id(1);
+	int index = y * width + x;
+	unsigned char pixel = src[index];
+	pixel /= 2;
+	src[index] = pixel;
+}
