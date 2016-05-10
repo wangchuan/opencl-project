@@ -23,7 +23,7 @@ kernel void simple_add(global const int* A, global const int* B, global int* C)
 }
 
 kernel void image_process(global unsigned char* src, const int height, const int width)
-{
+{ // add to test opencv
 	int y = get_global_id(0);
 	int x = get_global_id(1);
 	int index = y * width + x;
